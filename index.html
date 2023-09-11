@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="counter">0</button>
+    <button id="terminate">Terminate worker</button>
+    <script>
+        const counter = document.getElementById("counter")
+        const terminate = document.getElementById("terminate")
+        let content = 1
+        if (window.Worker) {
+            const myWorker = new Worker("worker.js");
+            counter.addEventListener("click", () => {
+                myWorker.postMessage(content++);
+            })
+
+            terminate.addEventListener("click", () => {
+                myWorker.terminate();
+            })
+            myWorker.onmessage = (e) => {
+
+                if (typeof e.data === "object") {
+                    console.log("value:", e.data);
+
+                } else {
+                    counter.innerHTML = e.data
+                    console.log("counter:", e.data);
+                }
+
+            }
+        }
+    </script>
+</body>
+
+</html>
